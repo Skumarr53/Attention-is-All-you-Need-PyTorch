@@ -1,0 +1,20 @@
+.data
+.ipynb_checkpoints
+fr-2-en-data
+models
+training
+transformer
+transformer_nlp
+8-translation-transformer.ipynb
+Attention_is_all_you_need.py
+Building a NLP App with Streamlit,Spacy and Python (NER,Sentiment Analyser,Summarizer) - YouTube.MP4
+cc.en.300.bin.gz
+cc.fr.300.bin.gz
+export.pkl
+Fastai-Translation
+Fastai-Translation.pkl
+How to choose and deploy your machine learning models - YouTube.mkv
+training-parallel-europarl-v7.tgz
+training-parallel-nc-v9.tgz
+Transformer (Attention is all you need).mp4
+WebApp/models/export.pkl
