@@ -3,10 +3,13 @@ import math
 import torch
 import torchvision
 import torch.nn as nn
+from fastai.text import *
 import numpy as np
 from pdb import set_trace
-
 from torch.autograd import Variable
+
+defaults.device = torch.device('cpu')
+device = 'cpu' #torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_attn_pad_mask(seq_q, seq_k, pad_index):
     batch_size, len_q = seq_q.size()

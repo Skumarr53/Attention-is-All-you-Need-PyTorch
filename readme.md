@@ -187,6 +187,21 @@ input Parametes:
         prob_mat = torch.Size([64, 28, 14236])
 ```
 
+## Training
+
+epoch | train_loss | valid_loss | seq2seq_acc | bleu | time
+------|------------|------------|-------------|------|-----
+0 | 2.548614 | 2.653859 | 0.609423 | 0.433331 | 01:28
+1 | 2.037472 | 2.200202 | 0.656494 | 0.467307 | 01:29
+2 | 1.715760 | 1.906313 | 0.683405 | 0.490627 | 01:30
+3 | 1.332565 | 1.701444 | 0.707107 | 0.514892 | 01:34
+4 | 1.062245 | 1.594243 | 0.722780 | 0.536479 | 01:36
+5 | 0.713107 | 1.555298 | 0.735008 | 0.557943 | 01:34
+6 | 0.394070 | 1.591297 | 0.743378 | 0.576106 | 01:31
+7 | 0.177876 | 1.653029 | 0.746438 | 0.584508 | 01:32
+8 | 0.075402 | 1.695086 | 0.748850 | 0.589291 | 01:31
+9 | 0.042065 | 1.710636 | 0.749605 | 0.590379 | 01:32
+
 
 ### References:
 1. [Attention Is All You Need - Paper (arxiv)](https://arxiv.org/abs/1706.03762)
@@ -196,3 +211,22 @@ input Parametes:
 
 3. [Transformer (Attention is all you need) - Minsuk Heo 허민석](https://www.youtube.com/watch?v=z1xs9jdZnuY&t=182s)
 
+    def forward(self, dec_outs, labels):
+        # Map the output to (0, 1)
+        dec_outs = dec_outs[0]
+        set_trace()
+        scores = self.LogSoftmax(dec_outs)
+        # n_class
+        num_tokens = scores.size(-1)
+
+        gtruth = labels.view(-1)
+        if self.confidence < 1:
+            tdata = gtruth.detach()
+            one_hot = self._smooth_label(num_tokens)
+            if labels.is_cuda:
+                one_hot = one_hot.cuda()
+            tmp_ = one_hot.repeat(gtruth.size(0), 1)
+            tmp_.scatter_(1, tdata.unsqueeze(1), self.confidence)
+            gtruth = tmp_.detach()
+        loss = self.criterion(scores, gtruth)
+        return loss
