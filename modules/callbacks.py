@@ -3,8 +3,9 @@ from fastai.callback import Callback
 from fastai.vision import *
 from pathlib import  Path, posixpath
 from pdb import set_trace
-from nltk.translate.bleu_score import corpus_bleu
+from nltk.translate.bleu_score import corpus_bleu, sentence_bleu
 from torch.autograd import Variable
+from pdb import  set_trace
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -156,3 +157,31 @@ class CorpusBLEU(Callback):
         len_penalty = exp(1 - self.targ_len/self.pred_len) if self.pred_len < self.targ_len else 1
         bleu = len_penalty * ((precs[0]*precs[1]*precs[2]*precs[3]) ** 0.25)
         return add_metrics(last_metrics, bleu)
+
+
+class BleuMetric(Callback):
+
+    def on_epoch_begin(self, **kwargs):
+        self.bleureferences = list()
+        self.bleucandidates = list()
+
+        
+    def on_batch_end(self, last_output, last_target, **kwargs):
+        preds = last_output[0].argmax(dim=-1)
+        decode_lengths = last_output[4].tolist()
+        preds, decode_lengths = list(preds), decode_lengths
+        hypotheses = list()
+        references = list()
+        for i,cap in enumerate(preds): hypotheses.append([str(x) for x in cap.tolist()[:decode_lengths[i]]])
+        for i,cap in enumerate(last_target): references.append([str(x) for x in cap.tolist()[:decode_lengths[i]]])
+        #for i,cap in enumerate(pred_words): hypotheses.append([x for x in cap.tolist() if x not in {self.vocab['xxunk'], self.vocab['xxpad'], self.vocab['xxbos'], self.vocab['xxeos'],self.vocab['xxfld'],self.vocab['xxmaj'],self.vocab['xxup'],self.vocab['xxrep'],self.vocab['xxwrep']}])
+        self.bleureferences.extend(references)
+        self.bleucandidates.extend(hypotheses)
+
+        
+
+        
+    def on_epoch_end(self, last_metrics, **kwargs):
+        assert len(self.bleureferences) == len(self.bleucandidates)
+        bleu4 = corpus_bleu(self.bleureferences, self.bleucandidates)
+        return add_metrics(last_metrics,bleu4)

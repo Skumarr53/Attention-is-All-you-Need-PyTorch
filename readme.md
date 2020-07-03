@@ -1,8 +1,28 @@
 # Attention is all you need
 
+- [Attention is all you need](#attention-is-all-you-need)
+  - [Transformer Flow chart](#transformer-flow-chart)
+  - [why not RNNS ?](#why-not-rnns-)
+    - [RNN based translation](#rnn-based-translation)
+    - [RNN based translation with Atention](#rnn-based-translation-with-atention)
+  - [Transform Theory](#transform-theory)
+    - [Intiuation behind using various components:](#intiuation-behind-using-various-components)
+- [Implementation using BERT](#implementation-using-bert)
+  - [Dataset](#dataset)
+  - [Training](#training)
+    - [Finding suitable learning rate](#finding-suitable-learning-rate)
+    - [Loss funtion - Label Smoothing Loss](#loss-funtion---label-smoothing-loss)
+    - [Fit through epochs:](#fit-through-epochs)
+  - [Technlolgies used](#technlolgies-used)
+  - [Credits:](#credits)
+  - [Creator](#creator)
+
+
+
+## Transformer Flow chart
 ![](Snapshots/the-annotated-transformer.png)
 
-## Transformers?, why not RNNS ?
+## why not RNNS ?
 ### RNN based translation
 
 A basic Seq2seq model consits of an encoder and decoder. Model takes input sentence into encoder and encodes word by word in each step and outputs hidden state (eh[t]) that stores the context of sentence till that point. so final hiden state at the end (eh[T]) stores context of entire sentence.
@@ -12,11 +32,11 @@ This hidden state (eh[T]) becomes input for decoder that decodes the context vec
 ![](Snapshots/RNN_based_encoderDecoder.png)
  
 ### RNN based translation with Atention
-In case of above model with Attention it differs in following things:
+Above model with **Attention** differs in following things:
 
-Instead of last hidden state, all the states (eh[0], eh[1]...,eh[T]) at every step along with final context vector (eh[T]) are passed into decoder. Idea here is each hidden state is mostly associated with certain word in the input sentence. using all the hidden state gives better translation.
+* Instead of last hidden state, all the states (eh[0], eh[1]...,eh[T]) at every step along with final context vector (eh[T]) are passed into decoder. Idea here is each hidden state is majorly associated with certain word in the input sentence. using all the hidden state gives better translation.
 
-At every time step in Decoding phase, Socres are computed for every hidden states (eh[t]) that stor how relevant is particular hidden state in predicting word at current step(t) in this way more importance is given to hidden state that is relevant in predicting current word.
+* At every time step in Decoding phase, Socres are computed for every hidden states (eh[t]) that stores how relevant is particular hidden state in predicting word at current step(t) in this way more importance is given to hidden state that is relevant in predicting current word.
 
 ex: when decoder predicts ist word more importance should be given to 1st hidden, 2nd hidden state (depends on the language struture) od all input hidden states.
 
@@ -92,33 +112,17 @@ outputs are passed fully comnnected layers same as encoder. Then Linear and soft
 
 **Encoder-Decoder Attention**: Decoder has to relay on Encoder input for understanding context of the complete sentence. Its achieved by allowing decoder query the encoded embeddings (*key* and *value*) that stores both positional and contextual information. Deocder predicts based on this embedding.
 
-**Encoder-Decoder Stack**: One thing to notice in the **Transformer** network is the dimesions of the encoded embeddings (output of encoder) remains same. In other words it can said that Encoded embedding in as improvised representation of orinal data. It can still be improved by stacking similar layer in sequence.  
+**Encoder-Decoder Stack**: One thing to notice in the **Transformer** network is the dimesions of the encoded embeddings (output of encoder) remains same. In other words it can said that Encoded embedding in as improvised representation of orinal data. It can still be improved by stacking similar layer in sequence.
 
 
-``` python
-def make_model(src_vocab, tar_vocab, N = 6, d_model = 512,
-               d_ff = 2048, h = 8, dropout = 0.1):
-    
-    c  = copy.deepcopy
-    attn = MultiHeadedAttention(h, d_model)
-    ff = PositionalEncoding(d_model, dropout)
-    position = PositionalEncoding(d_model, dropout)
-    model = EncoderDecoder(
-        Encoder(EncoderLayer(d_model, c(attn), c(ff), dropout),N),
-        Decoder(DecoderLayer(d_model, c(attn), c(attn), c(ff), 
-                             dropout), N),
-        nn.Sequential(Embeddings(d_model, src_vocab), c(position)),
-        nn.Sequential(Embeddings(d_model, tar_vocab), c(position)),
-        Generator(d_model, tar_vocab))
-    
-    for p in model.parameters():
-        if p.dim() > 1:
-            nn.init.xavier_uniform(p)
-    return model
-    
-```
 
-smaple data:
+# Implementation using BERT
+
+The Machine translation task has been implemented using [**BERT**](https://arxiv.org/abs/1810.04805) transformer architecture, which stands for **B**idirectional **E**ncoder **R**epresentations from **T**ransformers. BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. Hence, It is suiltable for wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications.  
+
+## Dataset 
+
+Dataset consists around 30000 pairs of french queries and their translation in English.  
 
  | fr | en
 -|----|---
@@ -129,7 +133,7 @@ smaple data:
  | À votre avis, pourquoi est-il important que les gouvernements gèrent les terres et les rivières? | What type of activities threaten the animals or plants in a national park?
 
 
-input Parametes:
+**Model input Parametes**:
 
 ``` python
 {'src_vocab_size': 22188,
@@ -144,66 +148,62 @@ input Parametes:
 
 1. **src_vocab_size** - source language vocabulary size
 2. **tgt_vocab_size** - target language vocabulary size
-3. **N** - No of layers Multi-Head attention units inside Encoder and decoder
-4. **d_model** - dimension of hidden units
-5. **d_ff** - dimension of the decoder's feed-forward output
-6. **d_k** - dimension of *key* vector 
-7. **d_v** - dimension of *value* vector
-8. **n_heads** - No of units in the Multihead attention
-9. **n_layers** - No of layers Multi-Head attention units inside Encoder and decoder
+3. **d_model** - dimension of hidden units
+4. **d_ff** - dimension of the decoder's feed-forward output
+5. **d_k** - dimension of *key* vector 
+6. **d_v** - dimension of *value* vector
+7. **n_heads** - No of units in the Multihead attention
+8. **n_layers** - No of layers in the Multi-Head attention units inside Encoder and decoder
 
-### Model Architecture:
-
-1. **copy.deepcopy** is function that creates copy of objects such that target if independent of original i.e changes made in the target do not reflect in the original.
-
-2. **MultiHeadedAttention**<br>
-* Class takes key, query and value (optional mask in case of decoder) vectors. 
-* **LayerNorm** - normalization 
-
-``` python    
-**input - outputs**
-    src = torch.Size([64, 30])
-    tar = torch.Size([64, 30])
-    src_mask = torch.Size([64, 1, 30])
-    tar_mask = torch.Size([64, 1, 30])
-    embedding = torch.Size([22188, 512])
-    embedding_out = torch.Size([64, 30, 512])
-    PositionalEncoding = torch.Size([64, 30, 512])
-    n_EncoderLayer = 6
-    EncoderLayer = torch.Size([64, 30, 512]) - 
-    MultiHeadedAttention: 
-        query, key, value = torch.Size([64, 30, 512])
-        tranformed: query, key, value = torch.Size([64, 8, 30, 64])
-        n_heads
-
-        attetion scores = torch.Size([64, 8, 30, 64])
-        concanting_scores = torch.Size([64, 30, 512])
-
-        post attention feed_froward (attntion dim to input embed dim) = torch.Size([64, 30, 512])
-        layer_norm + residual_conn + dropout layer = torch.Size([64, 30, 512])
-
-        positional_encoding(pe) =  torch.Size(['max_seq_len',512])
-        decoder_out = torch.Size([64, 28, 512])
-        prob_mat = torch.Size([64, 28, 14236])
-```
 
 ## Training
 
+### Finding suitable learning rate
+* Selecting learning rate using ```lr_find```, a **fastai** utility.
+
+![](Snapshots/lr_finder.png)
+
+```5e-4``` is the value choosen for learning rate
+
+### Loss funtion - Label Smoothing Loss
+Label Smoothing Loss is used as loss criteria. Authours point out in the paper that using label smoothing helped getting a better BLEU/accuracy, even if it made the loss worse.
+
+### Fit through epochs:
+
+The model is trained using ```fit_one_cycle``` method which is the implementation of implementation of popular **one cycle policy** technique. 
+
+![](Snapshots/model_fit.png)
+<center><i><b> n_baches vs loss</b></i></center><br>
+
+
+**Validation results**: 
 epoch | train_loss | valid_loss | seq2seq_acc | bleu | time
 ------|------------|------------|-------------|------|-----
-0 | 2.548614 | 2.653859 | 0.609423 | 0.433331 | 01:28
-1 | 2.037472 | 2.200202 | 0.656494 | 0.467307 | 01:29
-2 | 1.715760 | 1.906313 | 0.683405 | 0.490627 | 01:30
-3 | 1.332565 | 1.701444 | 0.707107 | 0.514892 | 01:34
-4 | 1.062245 | 1.594243 | 0.722780 | 0.536479 | 01:36
-5 | 0.713107 | 1.555298 | 0.735008 | 0.557943 | 01:34
-6 | 0.394070 | 1.591297 | 0.743378 | 0.576106 | 01:31
-7 | 0.177876 | 1.653029 | 0.746438 | 0.584508 | 01:32
-8 | 0.075402 | 1.695086 | 0.748850 | 0.589291 | 01:31
-9 | 0.042065 | 1.710636 | 0.749605 | 0.590379 | 01:32
+0 | 2.141443 | 2.071022 | 0.567044 | 0.400781 | 01:35
+1 | 1.898499 | 1.855029 | 0.565619 | 0.399401 | 01:35
+2 | 1.753499 | 1.721894 | 0.570702 | 0.409064 | 01:38
+3 | 1.610226 | 1.642993 | 0.572891 | 0.405655 | 01:39
+4 | 1.497186 | 1.608099 | 0.599936 | 0.430033 | 01:36
+5 | 1.357414 | 1.595815 | 0.614662 | 0.440933 | 01:36
+6 | 1.260690 | 1.604014 | 0.640098 | 0.473974 | 01:35
+7 | 1.187641 | 1.621607 | 0.664208 | 0.498927 | 01:36
+8 | 1.166813 | 1.645855 | 0.676659 | 0.511069 | 01:35
+9 | 1.142947 | 1.658493 | 0.679379 | 0.513981 | 01:35
 
 
-### References:
+## Technlolgies used
+
+![](https://forthebadge.com/images/badges/made-with-python.svg)
+
+[<img target="_blank" src="Snapshots/PyTorch.png" width=250>](https://pytorch.org/)
+[<img target="_blank" src="Snapshots/fastai.jpg" width=130>]()
+[<img target="_blank" src="Snapshots/Bert.jpg" width=120>](https://github.com/google-research/bert)
+[<img target="_blank" src="Snapshots/streamlit.png" width=150>](https://www.streamlit.io/)
+
+
+</br>
+
+## Credits:
 1. [Attention Is All You Need - Paper (arxiv)](https://arxiv.org/abs/1706.03762)
 
 2. [**harvardnlp** - The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
@@ -211,22 +211,8 @@ epoch | train_loss | valid_loss | seq2seq_acc | bleu | time
 
 3. [Transformer (Attention is all you need) - Minsuk Heo 허민석](https://www.youtube.com/watch?v=z1xs9jdZnuY&t=182s)
 
-    def forward(self, dec_outs, labels):
-        # Map the output to (0, 1)
-        dec_outs = dec_outs[0]
-        set_trace()
-        scores = self.LogSoftmax(dec_outs)
-        # n_class
-        num_tokens = scores.size(-1)
+</br>
 
-        gtruth = labels.view(-1)
-        if self.confidence < 1:
-            tdata = gtruth.detach()
-            one_hot = self._smooth_label(num_tokens)
-            if labels.is_cuda:
-                one_hot = one_hot.cuda()
-            tmp_ = one_hot.repeat(gtruth.size(0), 1)
-            tmp_.scatter_(1, tdata.unsqueeze(1), self.confidence)
-            gtruth = tmp_.detach()
-        loss = self.criterion(scores, gtruth)
-        return loss
+------
+## Creator
+[<img target="_blank" src="https://media-exp1.licdn.com/dms/image/C4D03AQG-6F3HHlCTVw/profile-displayphoto-shrink_200_200/0?e=1599091200&v=beta&t=WcZLox9lzVQqIDJ2-5DsEhNFvEE1zrZcvkmcepJ9QH8" width=150>](https://skumar-djangoblog.herokuapp.com/)
