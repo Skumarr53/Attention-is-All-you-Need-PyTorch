@@ -1,21 +1,19 @@
 # Attention is all you need
 
-- [Attention is all you need](#attention-is-all-you-need)
-  - [Transformer Flow chart](#transformer-flow-chart)
-  - [why not RNNS ?](#why-not-rnns-)
-    - [RNN based translation](#rnn-based-translation)
-    - [RNN based translation with Atention](#rnn-based-translation-with-atention)
-  - [Transform Theory](#transform-theory)
-    - [Intiuation behind using various components:](#intiuation-behind-using-various-components)
-- [Implementation using BERT](#implementation-using-bert)
-  - [Dataset](#dataset)
-  - [Training](#training)
-    - [Finding suitable learning rate](#finding-suitable-learning-rate)
-    - [Loss funtion - Label Smoothing Loss](#loss-funtion---label-smoothing-loss)
-    - [Fit through epochs:](#fit-through-epochs)
-  - [Technlolgies used](#technlolgies-used)
-  - [Credits:](#credits)
-  - [Creator](#creator)
+- [Transformer Flow chart](#transformer-flow-chart)
+- [why not RNNS ?](#why-not-rnns-)
+  - [RNN based translation](#rnn-based-translation)
+  - [RNN based translation with Atention](#rnn-based-translation-with-atention)
+- [Transform Theory](#transform-theory)
+  - [Intiuation behind using various components:](#intiuation-behind-using-various-components)
+- [Dataset](#dataset)
+- [Training](#training)
+  - [Finding suitable learning rate](#finding-suitable-learning-rate)
+  - [Loss funtion - Label Smoothing Loss](#loss-funtion---label-smoothing-loss)
+  - [Fit through epochs:](#fit-through-epochs)
+- [Technlolgies used](#technlolgies-used)
+- [Credits:](#credits)
+- [Creator](#creator)
 
 
 
@@ -124,13 +122,13 @@ The Machine translation task has been implemented using [**BERT**](https://arxiv
 
 Dataset consists around 30000 pairs of french queries and their translation in English.  
 
- | fr | en
--|----|---
- | Quelle sorte de poste aimeriez-vous occuper? | What sort of job would you like to be in?
- | What do adult attachment scales measure? | What do adult attachment scales measure?
- | Quel mécanisme utiliser pour mettre en œuvre cette protection (par exemple, les principes UDRP ou un autre mécanisme)? | What mechanism should be used to implement protection (for example, the UDRP or some other mechanism)?
- | Qu'arrive-t-il si les registres d'un organisme de bienfaisance ne sont pas satisfaisants? | What happens if a charity's records are inadequate?
- | À votre avis, pourquoi est-il important que les gouvernements gèrent les terres et les rivières? | What type of activities threaten the animals or plants in a national park?
+fr | en
+---|---
+Quelle sorte de poste aimeriez-vous occuper? | What sort of job would you like to be in?
+What do adult attachment scales measure? | What do adult attachment scales measure?
+Quel mécanisme utiliser pour mettre en œuvre cette protection (par exemple, les principes UDRP ou un autre mécanisme)? | What mechanism should be used to implement protection (for example, the UDRP or some other mechanism)?
+Qu'arrive-t-il si les registres d'un organisme de bienfaisance ne sont pas satisfaisants? | What happens if a charity's records are inadequate?
+À votre avis, pourquoi est-il important que les gouvernements gèrent les terres et les rivières? | What type of activities threaten the animals or plants in a national park?
 
 
 **Model input Parametes**:
