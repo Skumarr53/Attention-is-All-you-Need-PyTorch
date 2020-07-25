@@ -1,4 +1,5 @@
-# Attention is all you need
+# Machine Translation French to English: 
+#### **Implementation of idea proposed in 'Attention Is All You Need' paper**
 
 - [Demo](#demo)
 - [Transformer Flow chart](#transformer-flow-chart)
