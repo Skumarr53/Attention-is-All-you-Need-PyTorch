@@ -1,5 +1,6 @@
 # Attention is all you need
 
+- [Demo](#demo)
 - [Transformer Flow chart](#transformer-flow-chart)
 - [why not RNNS ?](#why-not-rnns-)
   - [RNN based translation](#rnn-based-translation)
@@ -15,7 +16,10 @@
 - [Credits:](#credits)
 - [Creator](#creator)
 
+## Demo
 
+![](Snapshots/Fr2En_translate.gif)
+<center><i>Demo of working App developed using Streamlit </i></center><br>
 
 ## Transformer Flow chart
 ![](Snapshots/the-annotated-transformer.png)

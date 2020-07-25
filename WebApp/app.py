@@ -15,7 +15,7 @@ from pdb import set_trace
 #from settings import * # import
 defaults.device = torch.device('cpu')
 model_path = Path('./models')
-learn = load_learner(model_path, 'Label_smoothing_trnsformer.pkl')
+learn = load_learner(model_path, 'export.pkl')
 learn.model = learn.model.to('cpu')
 
 
@@ -51,13 +51,7 @@ def main():
             st.success("No text found")
         else:
             st.success(translate(query));
-
+            
 
 if __name__=='__main__':
     main()
-
-'''
-dec_inp = start_tok[shape=(1,1)]
-enc_inp = inp_sent[shape=(1,len(sent))]
-
-'''
