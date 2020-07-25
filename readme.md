@@ -20,7 +20,7 @@
 ## Demo
 
 ![](Snapshots/Fr2En_translate.gif)
-<center><i>Demo of working App developed using Streamlit </i></center><br>
+<p align="center"><i>Demo of working App developed using Streamlit</i></p>
 
 ## Transformer Flow chart
 ![](Snapshots/the-annotated-transformer.png)
