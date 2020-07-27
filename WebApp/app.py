@@ -41,7 +41,7 @@ def translate(text):
 
 def main():
     st.title("French to English Translator")
-    st.subheader("translate freanch queries to english")
+    st.subheader("translate french queries to english")
 
     # get input from user
     query = st.text_area("Enter Your French Query","Type Here")
