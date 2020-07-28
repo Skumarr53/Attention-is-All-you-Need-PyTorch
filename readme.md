@@ -2,14 +2,10 @@
 #### **Implementation of idea proposed in 'Attention Is All You Need' paper**
 
 - [Demo](#demo)
-- [Transformer Flow chart](#transformer-flow-chart)
-- [why not RNNS ?](#why-not-rnns-)
-  - [RNN based translation](#rnn-based-translation)
-  - [RNN based translation with Atention](#rnn-based-translation-with-atention)
-- [Transform Theory](#transform-theory)
-  - [Intiuation behind using various components:](#intiuation-behind-using-various-components)
+- [Transformer Background](#transformer-background)
+  - [Transform Theory](#transform-theory)
 - [Dataset](#dataset)
-- [Training](#training)
+- [Training (Fastai)](#training-fastai)
   - [Finding suitable learning rate](#finding-suitable-learning-rate)
   - [Loss funtion - Label Smoothing Loss](#loss-funtion---label-smoothing-loss)
   - [Fit through epochs:](#fit-through-epochs)
@@ -22,11 +18,9 @@
 ![](Snapshots/Fr2En_translate.gif)
 <p align="center"><i>Demo of working App developed using Streamlit</i></p>
 
-## Transformer Flow chart
-![](Snapshots/the-annotated-transformer.png)
-
-## why not RNNS ?
-### RNN based translation
+## Transformer Background
+#### Why not use Recurrent neural network (RNN)?
+#### RNN based translation
 
 A basic Seq2seq model consits of an encoder and decoder. Model takes input sentence into encoder and encodes word by word in each step and outputs hidden state (eh[t]) that stores the context of sentence till that point. so final hiden state at the end (eh[T]) stores context of entire sentence.
 
@@ -34,8 +28,8 @@ This hidden state (eh[T]) becomes input for decoder that decodes the context vec
 
 ![](Snapshots/RNN_based_encoderDecoder.png)
  
-### RNN based translation with Atention
-Above model with **Attention** differs in following things:
+#### RNN based translation with Attention
+RNN model with **Attention** differs in following things:
 
 * Instead of last hidden state, all the states (eh[0], eh[1]...,eh[T]) at every step along with final context vector (eh[T]) are passed into decoder. Idea here is each hidden state is majorly associated with certain word in the input sentence. using all the hidden state gives better translation.
 
@@ -47,7 +41,8 @@ ex: when decoder predicts ist word more importance should be given to 1st hidden
 
 This method is significant improvement over prevoius but lacks parallelization capability and thus greater time complexity.
 
-## Transform Theory
+### Transform Theory
+![](Snapshots/the-annotated-transformer.png)
 
 It is used for translation i.e seq2seq as Attention model. It is different in following aspects.
 
@@ -80,7 +75,7 @@ Till now we have seen single head attention. we can also use multiple sets of q,
 
 * Attention Scores (vectors) are feed into feed forward network with weight matrices (Wo) to make attention output same dimension as the word embedding. 
 
-As we pass input embedding through many layers postional infomation may be decay. To make up for this we add attention output with input rataining position related information.
+As we pass input embedding through many layers postional infomation may be decay. To make up for this we add attention output with input vector retaining position related information.
 
 This is Encoder's final output is demension as input encoder. We can feed output to another encoder to make model robust. encoder can be stacked in series. Final, output from the last encoder becomes input for decoder. 
 
@@ -102,7 +97,7 @@ outputs are passed fully comnnected layers same as encoder. Then Linear and soft
 
 
 
-### Intiuation behind using various components:
+#### Intiuation behind using various components:
 
 **Positional Encoding**: As the **Tranformer** architecture does not have component to represent sequential nature of the data. This layer is used to inject relative positions of the word in the sequence.
 
@@ -119,7 +114,7 @@ outputs are passed fully comnnected layers same as encoder. Then Linear and soft
 
 
 
-# Implementation using BERT
+# Implementation using BERT Architecture
 
 The Machine translation task has been implemented using [**BERT**](https://arxiv.org/abs/1810.04805) transformer architecture, which stands for **B**idirectional **E**ncoder **R**epresentations from **T**ransformers. BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. Hence, It is suiltable for wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications.  
 
@@ -127,6 +122,7 @@ The Machine translation task has been implemented using [**BERT**](https://arxiv
 
 Dataset consists around 30000 pairs of french queries and their translation in English.  
 
+**Sample of query pairs**
 fr | en
 ---|---
 Quelle sorte de poste aimeriez-vous occuper? | What sort of job would you like to be in?
@@ -159,7 +155,7 @@ Qu'arrive-t-il si les registres d'un organisme de bienfaisance ne sont pas satis
 8. **n_layers** - No of layers in the Multi-Head attention units inside Encoder and decoder
 
 
-## Training
+## Training (Fastai)
 
 ### Finding suitable learning rate
 * Selecting learning rate using ```lr_find```, a **fastai** utility.
