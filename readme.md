@@ -7,7 +7,6 @@
 - [Dataset](#dataset)
 - [Training (Fastai)](#training-fastai)
   - [Finding suitable learning rate](#finding-suitable-learning-rate)
-  - [Loss funtion - Label Smoothing Loss](#loss-funtion---label-smoothing-loss)
   - [Fit through epochs:](#fit-through-epochs)
 - [Technlolgies used](#technlolgies-used)
 - [Credits:](#credits)
@@ -163,9 +162,6 @@ Qu'arrive-t-il si les registres d'un organisme de bienfaisance ne sont pas satis
 ![](Snapshots/lr_finder.png)
 
 ```5e-4``` is the value choosen for learning rate
-
-### Loss funtion - Label Smoothing Loss
-Label Smoothing Loss is used as loss criteria. Authours point out in the paper that using label smoothing helped getting a better BLEU/accuracy, even if it made the loss worse.
 
 ### Fit through epochs:
 

@@ -3,7 +3,6 @@
 fr-2-en-data
 models
 training
-transformer
 transformer_nlp
 8-translation-transformer.ipynb
 Attention_is_all_you_need.py
@@ -28,3 +27,5 @@ runs/Jul02_10-25-05_santhosh-PCstage1/events.out.tfevents.1593665705.santhosh-PC
 runs/Jul02_12-13-45_santhosh-PCstage1/events.out.tfevents.1593672225.santhosh-PC.21096.7
 runs/Jul02_12-51-32_santhosh-PCstage1/events.out.tfevents.1593674492.santhosh-PC.21096.8
 modules/__pycache__/callbacks.cpython-37.pyc
+transformer/__pycache__/model.cpython-37.pyc
+WebApp/transformer/__pycache__/model.cpython-37.pyc
