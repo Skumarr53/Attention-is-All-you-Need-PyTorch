@@ -1,6 +1,8 @@
+import torch
+import torch.nn as nn
 from statistics import mean
 from fastai.callback import Callback
-from fastai.vision import *
+#from fastai.vision import *
 from pathlib import  Path, posixpath
 from pdb import set_trace
 from nltk.translate.bleu_score import corpus_bleu, sentence_bleu
@@ -101,17 +103,17 @@ def seq2seq_acc(input, targ, pad_idx=1):
     return (out==targ).float().mean()
 
 
-class TeacherForcing(LearnerCallback):
+# class TeacherForcing(LearnerCallback):
     
-    def __init__(self, learn, end_epoch):
-        super().__init__(learn)
-        self.end_epoch = end_epoch
+#     def __init__(self, learn, end_epoch):
+#         super().__init__(learn)
+#         self.end_epoch = end_epoch
     
-    def on_batch_begin(self, last_input, last_target, train, **kwargs):
-        if train: return {'last_input': [last_input, last_target]}
+#     def on_batch_begin(self, last_input, last_target, train, **kwargs):
+#         if train: return {'last_input': [last_input, last_target]}
     
-    def on_epoch_begin(self, epoch, **kwargs):
-        self.learn.model.pr_force = 1 - epoch/self.end_epoch
+#     def on_epoch_begin(self, epoch, **kwargs):
+#         self.learn.model.pr_force = 1 - epoch/self.end_epoch
 
 
 
