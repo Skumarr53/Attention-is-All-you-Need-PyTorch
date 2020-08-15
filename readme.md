@@ -1,21 +1,30 @@
 # Machine Translation French to English: 
 #### **Implementation of idea proposed in 'Attention Is All You Need' paper**
 
-- [Demo](#demo)
-- [Transformer Background](#transformer-background)
-  - [Transform Theory](#transform-theory)
-- [Dataset](#dataset)
-- [Training (Fastai)](#training-fastai)
-  - [Finding suitable learning rate](#finding-suitable-learning-rate)
-  - [Fit through epochs:](#fit-through-epochs)
-- [Technologies used](#technologies-used)
-- [Credits:](#credits)
-- [Creator](#creator)
+- [Machine Translation French to English:](#machine-translation-french-to-english)
+  - [Demo](#demo)
+  - [What's in this repo?](#whats-in-this-repo)
+  - [Transformer Background](#transformer-background)
+    - [Transform Theory](#transform-theory)
+- [Implementation using BERT Architecture](#implementation-using-bert-architecture)
+  - [Dataset](#dataset)
+  - [Training (Fastai)](#training-fastai)
+    - [Finding suitable learning rate](#finding-suitable-learning-rate)
+    - [Fit through epochs:](#fit-through-epochs)
+  - [Technologies used](#technologies-used)
+  - [Credits:](#credits)
+  - [Creator](#creator)
 
 ## Demo
 
 ![](Snapshots/Fr2En_translate.gif)
 <p align="center"><i>Demo of working App developed using Streamlit</i></p>
+
+## What's in this repo?
+* [Fr2En_MachineTranslation_final.ipynb](Fr2En_MachineTranslation_final.ipynb) - Notebook with all the preprocessing, data prepartion, and model building training steps.
+* [transformer/model.py](transformer/model.py) - Pytorch implementation of BERT model architecture.
+* [modules/callbacks.py](modules/callbacks.py) - Fastai Callback utilities of loss and validation metric functions. 
+* [WebApp](WebApp) - This directory contains model deployment setup files. 
 
 ## Transformer Background
 #### Why not use Recurrent neural network (RNN)?
